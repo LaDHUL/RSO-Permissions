@@ -1,0 +1,200 @@
+# 
+# this is to be used with https://code.visualstudio.com/api/references/vscode-api
+# 
+
+### Default variables
+
+@server         = https://api.0118-test-server.dasch.swiss
+
+@proj_id              = http://rdfh.ch/projects/0118
+
+@proj_id_enc          = http%3A%2F%2Frdfh.ch%2Fprojects%2F0118
+
+### env variables
+
+# in a `.env` file, define:
+# adminUser=<admin user>
+# adminPwd=<admin password>
+
+
+# get some information to:
+# - check what was then, what is now, after running requests below
+# - get IRI, turn them in url-encoded strings 
+
+### Get list of projects
+
+GET {{server}}/admin/projects
+
+### Get all permissions
+
+GET {{server}}/admin/permissions/{{proj_id_enc}}
+Authorization: Basic {{$dotenv adminUser}}:{{$dotenv adminPwd}}
+
+### Get administrative permissions for knora-admin:ProjectAdmin
+
+GET {{server}}/admin/permissions/ap/{{proj_id_enc}}
+Authorization: Basic {{$dotenv adminUser}}:{{$dotenv adminPwd}}
+
+### create a new admin permission => fails
+
+# should be:
+# knora-base:hasPermissions 
+#  "ProjectAdminAllPermission|
+#   ProjectResourceCreateRestrictedPermission 
+#     http://www.knora.org/ontology/0118/rome-siecles-obscurs#Author,
+#     http://www.knora.org/ontology/0118/rome-siecles-obscurs#Book,
+#     http://www.knora.org/ontology/0118/rome-siecles-obscurs#BookChapter,
+#     http://www.knora.org/ontology/0118/rome-siecles-obscurs#Building,
+#     http://www.knora.org/ontology/0118/rome-siecles-obscurs#Chapel,
+#     http://www.knora.org/ontology/0118/rome-siecles-obscurs#CriticalEdition,
+#     http://www.knora.org/ontology/0118/rome-siecles-obscurs#Function,
+#     http://www.knora.org/ontology/0118/rome-siecles-obscurs#Illustration,
+#     http://www.knora.org/ontology/0118/rome-siecles-obscurs#IllustrationRestrictedAccess,
+#     http://www.knora.org/ontology/0118/rome-siecles-obscurs#Journal,
+#     http://www.knora.org/ontology/0118/rome-siecles-obscurs#JournalArticle,
+#     http://www.knora.org/ontology/0118/rome-siecles-obscurs#Manuscript,
+#     http://www.knora.org/ontology/0118/rome-siecles-obscurs#Person,
+#     http://www.knora.org/ontology/0118/rome-siecles-obscurs#Work"^^xsd:string .
+
+POST {{server}}/admin/permissions/ap
+Authorization: Basic {{$dotenv adminUser}}:{{$dotenv adminPwd}}
+
+{
+    "administrative_permission": {
+      "forGroup": "http://www.knora.org/ontology/knora-admin#ProjectAdmin",
+      "forProject": "http://rdfh.ch/projects/0118",
+        "hasPermissions": [
+            {
+                "additionalInformation": null,
+                "name": "ProjectAdminGroupAllPermission",
+                "permissionCode": null
+            },
+            {
+                "additionalInformation": null,
+                "name": "ProjectResourceCreateRestrictedPermission http://www.knora.org/ontology/0118/rome-siecles-obscurs#Author,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Book,http://www.knora.org/ontology/0118/rome-siecles-obscurs#BookChapter,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Building,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Chapel,http://www.knora.org/ontology/0118/rome-siecles-obscurs#CriticalEdition,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Function,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Illustration,http://www.knora.org/ontology/0118/rome-siecles-obscurs#IllustrationRestrictedAccess,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Journal,http://www.knora.org/ontology/0118/rome-siecles-obscurs#JournalArticle,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Manuscript,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Person,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Work",
+                "permissionCode": null
+            }
+        ],
+        "id": "http://rdfh.ch/permissions/0118/rome-siecles-obscurs-a001"
+    }
+}
+
+### modify the existing permission => fails
+
+# reading from previous call the permission for ProjectAdmin: http://rdfh.ch/permissions/0118/6DF1An_bTV-02gfLgm7yfA
+# encoding it: http%3A%2F%2Frdfh.ch%2Fpermissions%2F0118%2F6DF1An_bTV-02gfLgm7yfA
+
+@adminProjectPermissions = http%3A%2F%2Frdfh.ch%2Fpermissions%2F0118%2F6DF1An_bTV-02gfLgm7yfA
+
+PUT {{server}}/admin/permissions/{{adminProjectPermissions}}/hasPermissions
+Authorization: Basic {{$dotenv adminUser}}:{{$dotenv adminPwd}}
+Content-Type: application/json
+
+{
+   "hasPermissions":[
+     {
+       "additionalInformation":"http://www.knora.org/ontology/0118/rome-siecles-obscurs#Author",
+                "name": "ProjectResourceCreateRestrictedPermission http://www.knora.org/ontology/0118/rome-siecles-obscurs#Author,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Book,http://www.knora.org/ontology/0118/rome-siecles-obscurs#BookChapter,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Building,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Chapel,http://www.knora.org/ontology/0118/rome-siecles-obscurs#CriticalEdition,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Function,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Illustration,http://www.knora.org/ontology/0118/rome-siecles-obscurs#IllustrationRestrictedAccess,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Journal,http://www.knora.org/ontology/0118/rome-siecles-obscurs#JournalArticle,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Manuscript,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Person,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Work",
+       "permissionCode":null
+     }
+   ]
+}
+
+
+### Get Default Object Access Permissions (doap)
+
+GET {{server}}/admin/permissions/doap/{{proj_id_enc}}
+Authorization: Basic {{$dotenv adminUser}}:{{$dotenv adminPwd}}
+
+### modify existing permissions
+
+# ProjectMember : change "CR ProjectAdmin, M ProjectMember" in "CR ProjectAdmin, D ProjectMember" 
+
+PUT  {{server}}/admin/permissions/http%3A%2F%2Frdfh.ch%2Fpermissions%2F0118%2F_47c2K--RP6P3K5DKS_Lvg/hasPermissions
+Authorization: Basic {{$dotenv adminUser}}:{{$dotenv adminPwd}}
+Content-Type: application/json
+
+{
+    "hasPermissions":[
+      {
+        "additionalInformation":"http://www.knora.org/ontology/knora-admin#ProjectAdmin",
+        "name":"CR"
+      },
+      {
+        "additionalInformation":"http://www.knora.org/ontology/knora-admin#ProjectMember",
+        "name":"D"
+      }
+    ]
+}
+
+### delete project admin specific permission as all project admins are project members
+
+# http://rdfh.ch/permissions/0118/qOFi5isbQ0SNMjksXEukGA
+# http%3A%2F%2Frdfh.ch%2Fpermissions%2F0118%2FqOFi5isbQ0SNMjksXEukGA
+
+DELETE {{server}}/admin/permissions/http%3A%2F%2Frdfh.ch%2Fpermissions%2F0118%2FqOFi5isbQ0SNMjksXEukGA
+Authorization: Basic {{$dotenv adminUser}}:{{$dotenv adminPwd}}
+Content-Type: application/json
+
+### add default object access permission for IllustrationRestrictedAccess
+
+# this is not a valid uuid
+#     "id": "http://rdfh.ch/permissions/0118/rome-siecles-obscurs-o110",
+
+
+POST {{server}}/admin/permissions/doap
+Authorization: Basic {{$dotenv adminUser}}:{{$dotenv adminPwd}}
+Content-Type: application/json
+
+{
+    "forGroup":null,
+    "forProject":"http://rdfh.ch/projects/0118",
+    "forProperty": "http://www.knora.org/ontology/knora-base#hasStillImageFileValue",
+    "forResourceClass": "http://www.knora.org/ontology/0118/rome-siecles-obscurs#IllustrationRestrictedAccess",
+    "hasPermissions":[
+      {
+        "additionalInformation":"http://www.knora.org/ontology/knora-admin#ProjectAdmin",
+        "name":"CR"
+      },
+      {
+        "additionalInformation":"http://www.knora.org/ontology/knora-admin#ProjectMember",
+        "name":"D"
+      }
+    ]
+}
+
+
+### add default object access permission for Illustration (no restrictions)
+
+# this is not a valid uuid
+#     "id": "http://rdfh.ch/permissions/0118/rome-siecles-obscurs-o110",
+
+
+POST {{server}}/admin/permissions/doap
+Authorization: Basic {{$dotenv adminUser}}:{{$dotenv adminPwd}}
+Content-Type: application/json
+
+{
+    "forGroup":null,
+    "forProject":"http://rdfh.ch/projects/0118",
+    "forProperty": "http://www.knora.org/ontology/knora-base#hasStillImageFileValue",
+    "forResourceClass": "http://www.knora.org/ontology/0118/rome-siecles-obscurs#Illustration",
+    "hasPermissions":[
+      {
+        "additionalInformation":"http://www.knora.org/ontology/knora-admin#ProjectAdmin",
+        "name":"CR"
+      },
+      {
+        "additionalInformation":"http://www.knora.org/ontology/knora-admin#ProjectMember",
+        "name":"D"
+      },
+            {
+        "additionalInformation":"http://www.knora.org/ontology/knora-admin#KnownUser",
+        "name":"V"
+      },
+      {
+        "additionalInformation":"http://www.knora.org/ontology/knora-admin#UnknownUser",
+        "name":"RV"
+      }
+    ]
+}
