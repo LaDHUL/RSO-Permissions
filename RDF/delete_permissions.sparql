@@ -1,0 +1,17 @@
+#
+# delete existing permissions
+#
+# set variables ADMINUSER, ADMINPWD
+# rupdate --update=delete_permissions.sparql --service=http://${ADMINUSER}:${ADMINPWD}@db.0118-test-server.dasch.swiss/dsp-repo
+# (rupdate comes with jena fuseki)
+#
+
+PREFIX knora-admin: <http://www.knora.org/ontology/knora-admin#>
+PREFIX knora-base: <http://www.knora.org/ontology/knora-base#>
+
+with <http://www.knora.org/data/permissions>
+delete { ?s ?p ?o }
+where {
+  ?s ?p ?o .
+  ?s knora-admin:forProject <http://rdfh.ch/projects/0118> .
+}

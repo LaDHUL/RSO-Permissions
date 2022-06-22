@@ -1,0 +1,70 @@
+#
+# Turtle file defining the permissions
+# 
+# to be uploaded on the triple store:
+# curl -u ${ADMINUSER}:${ADMINPWD} -H 'Content-Type:text/turtle; charset=utf-8' --data-binary @rome-siecles-permissions.ttl -X POST 'https://db.0118-test-server.dasch.swiss/dsp-repo/data?graph=http://www.knora.org/data/permissions'
+#
+
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xml: <http://www.w3.org/XML/1998/namespace> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+@prefix foaf: <http://xmlns.com/foaf/0.1/> .
+@prefix knora-base: <http://www.knora.org/ontology/knora-base#> .
+@prefix knora-admin: <http://www.knora.org/ontology/knora-admin#> .
+@prefix salsah-gui: <http://www.knora.org/ontology/salsah-gui#> .
+@prefix rome-siecles-obscurs: <http://www.knora.org/ontology/0118/rome-siecles-obscurs#> .
+
+# --- Administrative permissions ---
+
+### Administrative Permissions on ProjectAdmin
+<http://rdfh.ch/permissions/0118/rome-siecles-obscurs-a001> rdf:type knora-admin:AdministrativePermission ;
+                      knora-admin:forProject <http://rdfh.ch/projects/0118> ;
+                      knora-admin:forGroup knora-admin:ProjectAdmin ;
+                      # knora-base:hasPermissions "ProjectAdminAllPermission|ProjectResourceCreateAllPermission"^^xsd:string .
+                      knora-base:hasPermissions "ProjectAdminAllPermission|ProjectResourceCreateRestrictedPermission http://www.knora.org/ontology/0118/rome-siecles-obscurs#Author,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Book,http://www.knora.org/ontology/0118/rome-siecles-obscurs#BookChapter,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Building,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Chapel,http://www.knora.org/ontology/0118/rome-siecles-obscurs#CriticalEdition,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Function,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Illustration,http://www.knora.org/ontology/0118/rome-siecles-obscurs#IllustrationRestrictedAccess,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Journal,http://www.knora.org/ontology/0118/rome-siecles-obscurs#JournalArticle,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Manuscript,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Person,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Work"^^xsd:string .                    
+
+
+### Administrative Permissions on ProjectMember
+<http://rdfh.ch/permissions/0118/rome-siecles-obscurs-a003> rdf:type knora-admin:AdministrativePermission ;
+                      knora-admin:forProject <http://rdfh.ch/projects/0118> ;
+                      knora-admin:forGroup knora-admin:ProjectMember ;
+                      knora-base:hasPermissions "ProjectResourceCreateRestrictedPermission http://www.knora.org/ontology/0118/rome-siecles-obscurs#Author,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Book,http://www.knora.org/ontology/0118/rome-siecles-obscurs#BookChapter,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Building,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Chapel,http://www.knora.org/ontology/0118/rome-siecles-obscurs#CriticalEdition,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Function,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Illustration,http://www.knora.org/ontology/0118/rome-siecles-obscurs#IllustrationRestrictedAccess,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Journal,http://www.knora.org/ontology/0118/rome-siecles-obscurs#JournalArticle,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Manuscript,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Person,http://www.knora.org/ontology/0118/rome-siecles-obscurs#Work"^^xsd:string .
+
+
+# --- Default Object Access Permissions on Groups ---
+
+### Default Object Access Permissions on ProjectMember Group
+<http://rdfh.ch/permissions/0118/rome-siecles-obscurs-o001> rdf:type knora-admin:DefaultObjectAccessPermission ;
+                      knora-admin:forProject <http://rdfh.ch/projects/0118> ;
+                      knora-admin:forGroup knora-admin:ProjectMember ;
+                      knora-base:hasPermissions "CR knora-admin:ProjectAdmin|D knora-admin:ProjectMember|V knora-admin:UnknownUser,knora-admin:KnownUser"^^xsd:string .
+
+# ### Default Object Access Permissions on ProjectAdmin Group # unnecessary given the fact that every Admin user will also be a ProjectMember.
+# <http://rdfh.ch/permissions/0118/rome-siecles-obscurs-o002> rdf:type knora-admin:DefaultObjectAccessPermission ;
+#                       knora-admin:forProject <http://rdfh.ch/projects/0118> ;
+#                       knora-admin:forGroup knora-admin:ProjectAdmin ;
+#                       knora-base:hasPermissions "RV knora-admin:UnknownUser|V knora-admin:KnownUser|M knora-admin:ProjectMember|D knora-admin:Creator|CR knora-admin:ProjectAdmin"^^xsd:string .
+
+# --- Default Object Access Permissions on Resources ---
+
+<http://rdfh.ch/permissions/0118/rome-siecles-obscurs-o011> a knora-admin:DefaultObjectAccessPermission ;
+    knora-admin:forProject <http://rdfh.ch/projects/0118> ;
+    knora-admin:forResourceClass <http://www.knora.org/ontology/0118/rome-siecles-obscurs#IllustrationRestrictedAccess> ;
+    knora-base:hasPermissions "CR knora-admin:ProjectAdmin|D knora-admin:ProjectMember" .
+
+# --- Default Object Access Permissions combined on Resources and Properties ---
+
+<http://rdfh.ch/permissions/0118/rome-siecles-obscurs-o110> a knora-admin:DefaultObjectAccessPermission;
+  knora-admin:forProject <http://rdfh.ch/projects/0118> ;
+  knora-admin:forResourceClass <http://www.knora.org/ontology/0118/rome-siecles-obscurs#IllustrationRestrictedAccess> ;
+  knora-admin:forProperty <http://www.knora.org/ontology/knora-base#hasStillImageFileValue>;
+  knora-base:hasPermissions "CR knora-admin:ProjectAdmin|D knora-admin:ProjectMember" .
+
+<http://rdfh.ch/permissions/0118/rome-siecles-obscurs-o111> a knora-admin:DefaultObjectAccessPermission;
+  knora-admin:forProject <http://rdfh.ch/projects/0118> ;
+  knora-admin:forResourceClass <http://www.knora.org/ontology/0118/rome-siecles-obscurs#Illustration> ;
+  knora-admin:forProperty <http://www.knora.org/ontology/knora-base#hasStillImageFileValue>;
+  knora-base:hasPermissions "CR knora-admin:ProjectAdmin|D knora-admin:ProjectMember|V knora-admin:KnownUser|RV knora-admin:UnknownUser" .
+

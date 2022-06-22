@@ -1,0 +1,23 @@
+#
+# insert the triple defining the restricted view degraded resolution 
+# 
+# set variables ADMINUSER, ADMINPWD
+# rupdate --update restricted_view.sparql --service=http://${ADMINUSER}:${ADMINPWD}@db.0118-test-server.dasch.swiss/dsp-repo
+# (rupdate comes with jena fuseki)
+#
+
+PREFIX knora-base: <http://www.knora.org/ontology/knora-base#>
+PREFIX rdfs: <http://www.w3.org/2000/01/rdf-schema#>
+PREFIX knora-admin: <http://www.knora.org/ontology/knora-admin#>
+
+# uncomment if an existing value already exists
+#delete data { 
+#  graph <http://www.knora.org/data/admin> {
+#    <http://rdfh.ch/projects/0118> knora-admin:projectRestrictedViewSize "pct:30"
+#  }
+#};
+insert data {
+  graph <http://www.knora.org/data/admin> {
+    <http://rdfh.ch/projects/0118> knora-admin:projectRestrictedViewSize "pct:13"
+  }
+};
